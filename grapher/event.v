@@ -30,7 +30,9 @@ fn (mut me Grapher[T]) on_event[T](e &tui.Event) {
 }
 
 fn (mut me Grapher[T]) user_handler[T](e &tui.Event) bool {
-	return lock me.config {
-		me.config.handler(e, mut me.config)
-	}
+	mut result := false
+	locker(mut me.config_mutex, fn [mut me, e, mut result] [T]() {
+		result = me.config.handler(e, mut &me.config)
+	})
+	return result
 }

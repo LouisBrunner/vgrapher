@@ -1,7 +1,6 @@
-EXAMPLES := exp
-SOURCES = grapher
-
-REXAMPLES = $(addprefix example-,$(EXAMPLES))
+EXAMPLES_FILE = $(wildcard examples/*.v)
+SOURCES = grapher $(EXAMPLES_FILE)
+EXAMPLES = $(patsubst examples/%.v,example-%,$(EXAMPLES_FILE))
 
 all: lint test examples
 .PHONY: all
@@ -19,10 +18,10 @@ test:
 	v test $(SOURCES)
 .PHONY: test
 
-$(REXAMPLES): example-%: examples/%.v
+$(EXAMPLES): example-%: examples/%.v
 	v $< -o $@
 
-examples: $(REXAMPLES)
+examples: $(EXAMPLES)
 .PHONY: examples
 
 clean:

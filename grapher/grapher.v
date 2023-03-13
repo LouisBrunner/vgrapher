@@ -1,6 +1,7 @@
 module grapher
 
 import term.ui as tui
+import sync
 
 pub type GeneratorF = fn (data T) map[f64]f64
 
@@ -19,27 +20,29 @@ struct Generation {
 	data map[f64]f64
 }
 
-struct None {}
-
-// FIXME: VBUG, option is basically unusable at the moment, especially with shared
-type MyOption[T] = None | T
-
+// FIXME: VBUG, can't have shared in a struct
 struct Grapher[T] {
 mut:
 	// user
-	config shared Config[T]
+	config_mutex sync.Mutex
+	config       Config[T]
 	// internal
 	tui &tui.Context = unsafe { nil }
 	// calculation
-	calculating        shared MyOption[thread]
-	queued_calculation shared bool
-	cached_result      shared MyOption[Generation]
+	calculation_mutex  sync.Mutex
+	calculating        MyOption[thread] = None{}
+	queued_calculation bool
+	result_mutex       sync.Mutex
+	cached_result      MyOption[Generation] = None{}
 }
 
 pub fn run[T](config Config[T]) ? {
 	mut app := &Grapher[T]{
 		config: config
 	}
+	app.config_mutex.init()
+	app.calculation_mutex.init()
+	app.result_mutex.init()
 	app.recalculate()
 	app.tui = tui.init(
 		// FIXME: VBUG, fairly sure those [T] are not needed (they are everywhere)
