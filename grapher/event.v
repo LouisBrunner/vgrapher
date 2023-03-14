@@ -2,8 +2,7 @@ module grapher
 
 import term.ui as tui
 
-// FIXME: VBUG, issue in the compiler
-// pub type Event = &tui.Event
+pub type Event = &tui.Event
 
 fn (mut me Grapher[T]) on_event[T](e &tui.Event) {
 	match e.typ {
@@ -30,9 +29,7 @@ fn (mut me Grapher[T]) on_event[T](e &tui.Event) {
 }
 
 fn (mut me Grapher[T]) user_handler[T](e &tui.Event) bool {
-	mut result := false
-	locker(mut me.config_mutex, fn [mut me, e, mut result] [T]() {
-		result = me.config.handler(e, mut &me.config)
-	})
-	return result
+	return lock me.config {
+		me.config.handler(e, mut &me.config)
+	}
 }

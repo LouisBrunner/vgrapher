@@ -1,6 +1,5 @@
 import rand
 import grapher
-import term.ui as tui // TODO: REMOVE!!!
 
 struct Data {
 mut:
@@ -22,7 +21,7 @@ fn main() {
 			}
 			return result
 		}
-		handler: fn (e &tui.Event, mut config grapher.Config[Data]) bool {
+		handler: fn (e grapher.Event, mut config grapher.Config[Data]) bool {
 			match e.code {
 				.up {
 					config.data.rate += 0.1

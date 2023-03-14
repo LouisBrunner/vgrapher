@@ -86,19 +86,14 @@ fn (mut me Grapher[T]) draw[T]() {
 		}
 	}
 
-	fn [mut me] [T]() {
-		me.calculation_mutex.@lock()
-		defer {
-			me.calculation_mutex.unlock()
-		}
-
+	rlock me.calculating {
 		match me.calculating {
 			None {}
 			else {
 				me.draw_right_text(me.tui.window_width, me.tui.window_height, 'Calculating...')
 			}
 		}
-	}()
+	}
 
 	me.tui.reset()
 	me.tui.flush()
