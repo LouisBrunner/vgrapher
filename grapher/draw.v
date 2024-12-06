@@ -1,6 +1,5 @@
 module grapher
 
-import term.ui as tui
 import json
 import math
 
@@ -41,11 +40,11 @@ fn (mut me Grapher[T]) draw[T]() {
 					labels_start := 1
 					labels_end := me.tui.window_width
 
-					me.tui.draw_text(labels_start, me.tui.window_height - grapher.margin_bottom_labels,
+					me.tui.draw_text(labels_start, me.tui.window_height - margin_bottom_labels,
 						math.round_sig(min_x, legend_sig).str())
-					me.draw_centered_text(me.tui.window_width / 2, me.tui.window_height - grapher.margin_bottom_labels,
+					me.draw_centered_text(me.tui.window_width / 2, me.tui.window_height - margin_bottom_labels,
 						math.round_sig(mid_x, legend_sig).str())
-					me.draw_right_text(me.tui.window_width, me.tui.window_height - grapher.margin_bottom_labels,
+					me.draw_right_text(me.tui.window_width, me.tui.window_height - margin_bottom_labels,
 						math.round_sig(max_x, legend_sig).str())
 
 					span_map_x := labels_end - labels_start
@@ -53,7 +52,7 @@ fn (mut me Grapher[T]) draw[T]() {
 
 					me.tui.set_bg_color(r: 63, g: 81, b: 181)
 					me.tui.set_color(r: 255, g: 255, b: 255)
-					me.tui.draw_rect(1, 1 + grapher.margin_top, me.tui.window_width, me.tui.window_height - grapher.margin_bottom)
+					me.tui.draw_rect(1, 1 + margin_top, me.tui.window_width, me.tui.window_height - margin_bottom)
 
 					mut last_index := 0
 					mut values := map[f64]f64{}
@@ -72,13 +71,12 @@ fn (mut me Grapher[T]) draw[T]() {
 					values_y.sort()
 					min_y, max_y := values_y[0], values_y[values_y.len - 1]
 					span_y := max_y - min_y
-					span_map_y := me.tui.window_height - (grapher.margin_top +
-						grapher.margin_bottom + 1)
+					span_map_y := me.tui.window_height - (margin_top + margin_bottom + 1)
 
 					for x, y in values {
 						mapped_x := 1 + int((x - min_x) * span_map_x / span_x)
 						mapped_y := 1 + int(span_map_y - ((y - min_y) * span_map_y / span_y)) +
-							grapher.margin_top
+							margin_top
 						me.tui.draw_text(mapped_x, mapped_y, 'x')
 					}
 				}

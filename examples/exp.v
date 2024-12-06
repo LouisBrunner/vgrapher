@@ -9,9 +9,9 @@ mut:
 
 fn main() {
 	grapher.run(
-		title: 'Exponential Random Distribution'
-		data: Data{
-			rate: 1.0
+		title:     'Exponential Random Distribution'
+		data:      Data{
+			rate:   1.0
 			points: 1000.0
 		}
 		generator: fn (data Data) map[f64]f64 {
@@ -21,7 +21,7 @@ fn main() {
 			}
 			return result
 		}
-		handler: fn (e grapher.Event, mut config grapher.Config[Data]) bool {
+		handler:   fn (e grapher.Event, mut config grapher.Config[Data]) bool {
 			match e.code {
 				.up {
 					config.data.rate += 0.1
@@ -47,5 +47,5 @@ fn main() {
 			}
 			return true
 		}
-	)?
+	)!
 }
