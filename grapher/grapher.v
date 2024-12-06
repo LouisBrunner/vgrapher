@@ -37,6 +37,7 @@ pub fn run[T](config Config[T]) ! {
 	}
 	app.recalculate()
 	app.tui = tui.init(
+		// FIXME: VBUG, fairly sure those [T] are not needed (they are everywhere)
 		event_fn:    fn [mut app] [T](e &tui.Event, userdata voidptr) {
 			app.on_event(e)
 		}
